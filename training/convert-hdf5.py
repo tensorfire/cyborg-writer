@@ -23,8 +23,8 @@ for filename in os.listdir(in_directory):
     layer_names = [n.decode('utf8') for n in f.attrs['layer_names']]
 
 
-    if not os.path.exists(model_name): os.mkdir(model_name)
-
+    if not os.path.exists(os.path.join(out_directory, model_name)): 
+        os.mkdir(os.path.join(out_directory, model_name))
 
     for layer_name in layer_names:
         g = f[layer_name]
