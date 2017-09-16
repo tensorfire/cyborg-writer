@@ -4,14 +4,15 @@ import h5py
 import numpy as np
 import json
 
-directory = '.'
+in_directory = '.'
+out_directory = '../models'
 
-for filename in os.listdir(directory):
+for filename in os.listdir(in_directory):
     if not filename.endswith('.hdf5'): continue
     if filename.endswith('.old.hdf5'): continue
     print filename
 
-    hdf5_file = h5py.File(os.path.join(directory, filename), mode='r')
+    hdf5_file = h5py.File(os.path.join(in_directory, filename), mode='r')
 
     model_name, file_extension = os.path.splitext(filename)
 
@@ -86,7 +87,7 @@ for filename in os.listdir(directory):
             shape = 'x'.join(str(x) for x in list(weight_value.shape))
             weight = '_combined'
             name = layer_name  + weight + '-' + shape
-            bytearr.tofile(os.path.join(directory, model_name, name))
+            bytearr.tofile(os.path.join(out_directory, model_name, name))
 
         else:
             for weight_name in weight_names:
@@ -98,5 +99,5 @@ for filename in os.listdir(directory):
 
                 name = layer_name + '-weights-' + weight + '-' + shape
 
-                bytearr.tofile(os.path.join(directory, model_name, name))
+                bytearr.tofile(os.path.join(out_directory, model_name, name))
 
