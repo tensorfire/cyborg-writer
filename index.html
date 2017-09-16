@@ -3,208 +3,36 @@
 <script src="lib/demo-util.js"></script>
 <script src="lib/tensor.js"></script>
 <script src="lib/codemirror.js"></script>
+<script src="lib/scrollpastend.js"></script>
+<script src="lib/placeholder.js"></script>
 <link rel="stylesheet" href="lib/codemirror.css">
-
-
-<style type="text/css">
-    body {
-        font-family: sans-serif;
-        background: whiteSmoke;
-        color: #000;
-        margin: 0px;
-    }
-    .CodeMirror {
-        font-family: sans-serif;
-        flex-grow: 1;
-
-    }
-
-    .CodeMirror-lines {
-        padding: 50px 0;
-        padding-top: 300px;
-    }
-    .CodeMirror pre {
-        padding: 0 100px;
-    }
-    #canvas {
-        display: none;
-    }
-    #editor {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-    }
-    body {
-        display: flex;
-        flex-direction: column;
-    }
-    footer {
-        padding: 10px;
-
-        border-top: 1px solid #c7c7c7;
-        display: flex;
-    }
-
-    .spacer {
-        flex-grow: 1;
-
-    }
-
-    .waiting {
-        display: inline-block;
-        border: 2px solid #dadada; /* Light grey */
-        border-top: 2px solid #3498db; /* Blue */
-        border-radius: 50%;
-        width: 8px;
-        height: 8px;
-        animation: spin 1s linear infinite;
-        margin: 0 5px;
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-
-
-#preamble {
-    padding: 20px 100px;
-    opacity: 0.8;
-    border-bottom: 1px solid #ccc;
-    background: whiteSmoke;
-    position: absolute;
-    top: 0 !important;
-    right: 0 !important;
-    left: 0 !important;
-}
-</style>
-
+<link rel="stylesheet" href="style.css">
 
 <div id="preamble">
-    <p>This is an <b>experimental text editor</b> with neural text synthesis. Hit <b>Tab</b> and it'll suggest a way to complete your sentence. 
+    <a href="https://github.com/tensorfire/cyborg-writer" class="github-corner" aria-label="View source on Github"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
 
-    <p>This tool is not here to replace human authors, but to augment them in ways that help escape writer's block, and produce more novel work.
+    <h1>Cyborg Writer</h1>
 
-    <p>It's inspired by <a href="https://www.robinsloan.com/notes/writing-with-the-machine/">Robin Sloan's Atom plugin</a>, and powered by <b>TensorFire</b> and <b>CodeMirror</b>.</p>
+    <p>This is an <b>experimental text editor</b> with an embedded <b>neural text synthesizer</b>. This goal here is not to replace human authors, but to augment them in ways that help escape writer's block and produce more novel work.
+
+    <p>This project was inspired by Robin Sloan's <a href="https://www.robinsloan.com/notes/writing-with-the-machine/"> rnn-writer</a>, and powered by <b>TensorFire</b> and <b>CodeMirror</b>. It's built by <b>Kevin Kwok</b> (<a href="https://twitter.com/antimatter15">@antimatter15</a>), and the <a href="https://tenso.rs/">TensorFire</a> team.
+
+    </p>
 </div>
 <div id="editor"></div>
 
 <footer>
-    
     <select id="model_picker" value="trump-256" onchange="loadModel()"></select>
     <span class="spacer"></span>
     Weirdness: <input id="temperature" oninput="document.getElementById('temp').innerHTML = (+this.value).toFixed(2)" onchange="updateCompletion()" type="range" style="width: 300px" value="0.6" min="0.1" max="2" step="0.01"> <span id="temp">0.60</span>
 </footer>
 
+
 <canvas id="canvas"></canvas>
-
+<script src="lstm.js"></script>
+<script src="models.js"></script>
+<script src="util.js"></script>
 <script>
-
-var models = {
-    "shakespeare-128": {
-        chars: ['\n', ' ', '!', '$', '&', "'", ',', '-', '.', '3', ':', ';', '?', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', ']', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
-        Ns: 128,
-        Ni: 67,
-        path: 'models/shakespeare-128',
-        name: 'William Shakespeare',
-        prefix: 'My parts for thy face for me to alone\nThat such seat a subjects I have said.\n\nCLAUDIUS:\n'
-    },
-    "slatestar-256": {
-        chars: ['\n', ' ', '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~'],
-        Ns: 256,
-        Ni: 95,
-        path: 'models/slatestar-256',
-        name: 'Slate Star Codex',
-        prefix: "I've worked with doctors who think Alcoholics Anonymous is so important for the treatment of alcoholism that anyone who refuses to go at least three times a week is in denial about their problem and can't benefit from further treatment. "
-    }, 
-    "aynrand-256": {
-        chars: ['\n', ' ', '!', '"', '#', '$', '&', "'", '(', ')', ',', '-', '.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '>', '?', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', ']', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', '\x80', '\x94', '\x99', '\x9d', '\xa3', '\xab', '\xc2', '\xe2'],
-        Ns: 256,
-        Ni: 95,
-        path: 'models/aynrand-256',
-        name: 'Ayn Rand',
-        prefix: "The light was ebbing, and Eddie Willers could not distinguish the bum's face. "
-    }, 
-    "dfw-256": {
-        chars: ['\n', '\r', ' ', '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '^', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~'],
-        Ns: 256,
-        Ni: 96,
-        path: 'models/dfw-256',
-        name: "David Foster Wallace",
-        prefix: "Most of the rest of the page's pictures are of farm-type animals behind wooden fences, looking the way things look that can't smile, that don't know a camera's looking. "
-    },
-    // "trump-big.old": {
-    //     chars: ['\n', '\r', ' ', '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '=', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~'],
-    //     Ns: 256,
-    //     Ni: 94,
-    //     path: 'models/trump-big.old'
-    // },
-    "trump-256": {
-        chars: ['\n', '\r', ' ', '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '=', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~'],
-        Ns: 256,
-        Ni: 94,
-        path: "models/trump-256",
-        name: 'Donald Trump',
-        prefix: 'I was always a big fan of Kim Novak and still am—a wonderful actress.\n'
-    },
-
-    "nietzsche.old": {
-        chars: ['\n', ' ', '!', '"', "'", '(', ')', ',', '-', '.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '=', '?', '[', ']', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '\x86', '\xa4', '\xa6', '\xa9', '\xab', '\xc3'],
-        Ns: 128,
-        Ni: 59,
-        path: "models/nietzsche.old",
-        name: 'Friedrich Nietzsche',
-        prefix: 'It stands to reason that this sketch of the saint, made upon the model of the whole species, can be confronted with many opposing sketches that would create a more agreeable impression.'
-    },
-
-    "scifi-128": {
-        chars: [' ', '!', '"', '#', "'", '(', ')', ',', '-', '.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '?', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
-        Ni: 75,
-        Ns: 128,
-        path: 'models/scifi-128',
-        name: 'Science Fiction',
-        prefix: 'On the second try two of the planes released rockets, which fortunately missed, but this put a different light on the whole thing. A direct hit with a ten inch rocket would be as dangerous as a torpedo. '
-    },
-
-    "scifi-256-256": {
-        chars: [' ', '!', '"', '#', "'", '(', ')', ',', '-', '.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '?', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
-        Ni: 75,
-        Ns: 256,
-        path: 'models/scifi-256-256',
-        layers: 2,
-        name: 'Science Fiction (2 layer)',
-        prefix: 'On the second try two of the planes released rockets, which fortunately missed, but this put a different light on the whole thing. A direct hit with a ten inch rocket would be as dangerous as a torpedo. '
-    },
-
-    "linux-256": {
-        chars: ['\t', '\n', '\x0c', ' ', '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~'],
-        Ni: 98,
-        Ns: 256,
-        path: 'models/linux-256',
-        name: 'Linux Kernel',
-        prefix: '/* TODO: conditionals */\n'
-    },
-    '2pac-128': {
-        chars: ['\t', '\n', '\r', ' ', '!', '"', '$', '&', "'", '(', ')', '*', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '?', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
-        Ni: 81,
-        Ns: 128,
-        path: 'models/2pac-128',
-        name: 'Tupac Shakur',
-        prefix: 'How did you put it down?\n'
-    },
-    // 'eminem-160': {
-    //     chars: ['\n', '\r', ' ', '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '>', '?', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '}'],
-    //     Ni: 88,
-    //     Ns: 160,
-    //     path: 'models/eminem-160'
-    // }
-}
 
 for(let k in models){
     document.getElementById('model_picker').appendChild(new Option(models[k].name || k, k))
@@ -217,128 +45,6 @@ var gl = TF.createGL(document.getElementById('canvas')),
     Tensor = TF.Tensor,
     InPlaceTensor = TF.InPlaceTensor;
 
-
-
-
-const LSTM = `
-    // Tensor output: [Ns, 1, 2]
-    uniform Tensor X; // [Ni, 1, 1]
-    uniform Tensor prev; // [Ns, 1, 2]
-    uniform Tensor W; // [Ns, Ns + Ni + 1, 4]
-    const int Ni = #(X.shape).x;
-    const int Ns = #(W.shape).x;
-
-    float tanh(float x){
-        float e = exp(2.0 * clamp(x, -10.0, 10.0) );
-        return (e-1.0)/(e+1.0);
-    }
-    float sigmoid(float x){ return 1.0/(1.0+exp(-clamp(x, -10.0, 10.0))); }
-    float hard_sigmoid(float x){ return clamp(x * 0.2 + 0.5, 0.0, 1.0); }
-
-    vec4 process4(ivec4 pos) {
-        int j = pos.x;
-        vec4 fioc = W.read4(j, 0); // bias
-        for(int k = 0; k < Ni; k++) // inputs
-            fioc += W.read4(j, 1 + k) * X.read4(k, 0).x; 
-        for(int k = 0; k < Ns; k++) // prev outputs
-            fioc += W.read4(j, 1 + Ni + k) * prev.read4(k, 0).x; 
-        float c_t = hard_sigmoid(fioc.x) * prev.read4(j, 0).y 
-                  + tanh(fioc.w) * hard_sigmoid(fioc.y); // state
-        float h_t = tanh(c_t) * hard_sigmoid(fioc.z); // output
-        return vec4(h_t, c_t, 0, 0);
-    }
-`
-
-
-const TextureBuffer = `
-    uniform Tensor buffer;
-    uniform Tensor data;
-    uniform int index;
-
-    vec4 process4(ivec4 pos){
-        if(pos.w == index){
-            return data.read4(ivec4(pos.xyz, 0));
-        }else{
-            return buffer.read4(pos);
-        }
-    }
-`
-
-const FullyConnected = `
-    uniform Tensor inputs;
-    uniform Tensor W;
-    uniform Tensor b;
-    const int length = #(inputs.shape).x;
-
-    vec4 process4(ivec4 pos) {
-        vec4 sum = vec4(0, 0, 0, 0);
-        for(int i = 0; i < length; i++){
-            sum += inputs.read4(i, 0) * W.read4(i, pos.x);
-        }
-        return sum + b.read4(pos);
-    }
-`
-
-const HardMax = `
-    uniform Tensor data;
-    const int length = #(data.shape).x;
-
-    vec4 process4(ivec4 pos) {
-        vec4 maxValue = vec4(-10000, -10000, -10000, -10000);
-        for(int i = 0; i < length; i++){
-            maxValue = max(maxValue, data.read4(i, 0));
-        }
-        return vec4(greaterThanEqual(data.read4(pos), maxValue));
-    }
-`
-
-const WarmSample = `
-    uniform Tensor data;
-    uniform float temperature;
-    uniform float random;
-
-    const int length = #(data.shape).x;
-    
-    vec4 process4(ivec4 pos) {
-        float sum = 0.0;
-        for(int i = 0; i < length; i++){
-            sum += exp(data.read4(i, 0).x / temperature);
-        }
-        float samp = 0.0;
-        for(int i = 0; i < length; i++){
-            float range = exp(data.read4(i, 0).x / temperature) / sum;
-            if(random > samp && random < samp + range){
-                return vec4(i, 0, 0, 0);
-            }
-            samp += range;
-        }
-        return vec4(0, 0, 0, 0);
-    }
-`
-
-const OneHot = `
-    uniform Tensor data;
-    
-    vec4 process4(ivec4 pos) {
-        if(abs(float(pos.x) - data.read4(0, 0).x) < 1.0){
-            return vec4(1, 1, 1, 1);
-        }else{
-            return vec4(0, 0, 0, 0);
-        }
-    }
-`
-
-
-async function loadArrayFromURL(fileName){
-    var xhr = new XMLHttpRequest()
-    xhr.open('GET', fileName, true)
-    xhr.responseType = 'arraybuffer'
-    xhr.send(null)
-    await new Promise(resolve => xhr.onload = resolve)
-    var buffer = new Float32Array(xhr.response)
-    var shape = fileName.match(/\d+(x\d+)*$/)[0].split('x').map(k => +k)
-    return ndarray(buffer, shape)
-}
 
 
 function destroyTensors(tensors){
@@ -426,39 +132,31 @@ async function generateCompletion(input, temperature = 0.7){
 var cm = CodeMirror(document.getElementById('editor'), {
     value: '',
     lineWrapping: true,
+    cursorScrollMargin: 50,
     extraKeys: {
         Tab: function(cm){
             updateCompletion()
         }
-    }
+    },
+    // scrollPastEnd: true,
+    placeholder: 'Hit Tab to cycle between synthesized sentences.'
 });
 
-// var sizer = document.querySelector('.CodeMirror-sizer')
-// sizer.insertBefore(document.getElementById('preamble'), sizer.firstChild)
-
 cm.addWidget({ line: 0, ch: 0}, document.getElementById('preamble'))
+cm.on('refresh', function(){
+    var oh = document.getElementById('preamble').offsetHeight
+    if (cm.state.preamblePadding != oh) {
+        cm.display.lineSpace.parentNode.style.paddingTop = oh + 50;
+    }
+})
 
-// cm.on('beforeSelectionChange', function(cm, obj){
-//     // 
-//     // console.log('cusor move', obj)
-//     if(obj.origin){
-//         currentCompletion = -1;
-//     }
-// })
-
-// function nextFrame(){
-//     return new Promise(next => setTimeout(next, 60 * 1000 / (280 * 5) ))
-// }
-
-function nextFrame(){
-    return new Promise(next => setTimeout(next, 10 ))
-}
-
-// const PREFIX = 'They expressed their feelings loud and clear. \n'
-
+cm.setOption('scrollPastEnd', true)
+cm.refresh()
 
 // var currentCompletion;
 async function updateCompletion(){
+    if(document.getElementById('model_picker').disabled) return;
+
     // let attempt = Date.now();
     // currentCompletion = attempt;
     var m = models[document.getElementById('model_picker').value]
@@ -470,6 +168,8 @@ async function updateCompletion(){
     // cm.setBookmark(cm.getCursor('from'), {
     //     widget: waitEl
     // })
+
+    if(!cm.getSelection()) cm.replaceSelection('#', 'around');
 
     var mark = cm.markText(cm.getCursor('from'), cm.getCursor('to'), {
         replacedWith: waitEl,
