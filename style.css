@@ -93,6 +93,16 @@ a {
     left: 0 !important;
 }
 
+
 .CodeMirror #preamble {
     border-bottom: 1px solid #ccc;
+}
+
+@media (max-width: 700px){
+    #preamble {
+        padding: 20px 20px;
+    }
+    .CodeMirror pre {
+        padding: 0 20px;
+    }
 }
