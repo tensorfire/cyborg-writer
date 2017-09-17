@@ -88,3 +88,12 @@ a {
     right: 0 !important;
     left: 0 !important;
 }
+
+@media (max-width: 700px){
+    #preamble {
+        padding: 20px 20px;
+    }
+    .CodeMirror pre {
+        padding: 0 20px;
+    }
+}
