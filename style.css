@@ -1,3 +1,7 @@
+html, body {
+    height: 100%;
+}
+
 body {
     font-family: sans-serif;
     font-size: 13pt;
@@ -81,10 +85,14 @@ a {
     padding: 20px 100px;
     opacity: 0.8;
     line-height: 1.5;
-    border-bottom: 1px solid #ccc;
+    
     background: whiteSmoke;
     position: absolute;
     top: 0 !important;
     right: 0 !important;
     left: 0 !important;
+}
+
+.CodeMirror #preamble {
+    border-bottom: 1px solid #ccc;
 }
