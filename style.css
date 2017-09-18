@@ -13,8 +13,10 @@ body {
 }
 .CodeMirror {
     font: inherit;
-    flex-grow: 1;
-
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    line-height: 1.5;
 }
 
 .CodeMirror pre.CodeMirror-placeholder { color: #999; }
@@ -23,7 +25,6 @@ body {
 
 .CodeMirror-lines {
     padding: 50px 0;
-    padding-top: 300px;
 }
 .CodeMirror pre {
     padding: 0 100px;
@@ -32,19 +33,38 @@ body {
     display: none;
 }
 #editor {
-    flex-grow: 1;
+    flex: 1;
+    position: relative;
+}
+
+html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+#workaround {
     display: flex;
     flex-direction: column;
+    align-items: stretch;
+    flex: 5;
 }
-body {
+
+#container {
     display: flex;
     flex-direction: column;
+    position: absolute;
+    height: 100%;
+    width: 100%;
 }
+
+
 footer {
     padding: 10px;
+    display: flex;
 
     border-top: 1px solid #c7c7c7;
-    display: flex;
 }
 
 .spacer {
@@ -84,7 +104,7 @@ a {
 #preamble {
     padding: 20px 100px;
     opacity: 0.8;
-    line-height: 1.5;
+    
     
     background: whiteSmoke;
     position: absolute;
