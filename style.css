@@ -63,7 +63,7 @@ html, body {
 footer {
     padding: 10px;
     display: flex;
-
+    overflow: hidden;
     border-top: 1px solid #c7c7c7;
 }
 
@@ -130,7 +130,7 @@ a {
         padding: 0 20px;
     }
     #weirdness-stuff {
-        display: none;
+        display: none !important;
     }
     #do-stuff {
         display: inline;
