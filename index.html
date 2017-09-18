@@ -1,13 +1,16 @@
 <!doctype html>
+<head>
 <title>Cyborg Writer</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
-<meta name="description" content="">
+<meta name="description" content="An experimental text editor with an embedded neural text synthesizer.">
+<meta name="keywords" content="neural,text,editor,autocomplete,prediction,generator,neural network,tensorfire">
+<meta name="author" content="Kevin Kwok">
 
 <link rel="stylesheet" href="lib/codemirror.css">
 <link rel="stylesheet" href="style.css">
-
+</head>
 <body>
 
 <div id="container">
@@ -174,10 +177,11 @@ cm.setOption('scrollPastEnd', true)
 cm.refresh()
 cm.focus()
 
-// var currentCompletion;
+var isGenerating = false;
 async function updateCompletion(){
     if(document.getElementById('model_picker').disabled) return;
-
+    if(isGenerating) return;
+    isGenerating = true;
     // let attempt = Date.now();
     // currentCompletion = attempt;
     var m = models[document.getElementById('model_picker').value]
@@ -230,6 +234,8 @@ async function updateCompletion(){
     }else{
         console.warn('unable to find complete sentence', leadingText)
     }
+
+    isGenerating = false;
 }
 
 
