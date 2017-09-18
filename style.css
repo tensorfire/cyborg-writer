@@ -118,11 +118,21 @@ a {
     border-bottom: 1px solid #ccc;
 }
 
+#do-stuff {
+    display: none;
+}
+
 @media (max-width: 700px){
     #preamble {
         padding: 20px 20px;
     }
     .CodeMirror pre {
         padding: 0 20px;
+    }
+    #weirdness-stuff {
+        display: none;
+    }
+    #do-stuff {
+        display: inline;
     }
 }
