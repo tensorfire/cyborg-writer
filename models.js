@@ -51,7 +51,8 @@ var models = {
         Ni: 79,
         Ns: 128,
         path: "models/taylorswift-128",
-        name: 'Taylor Swift'
+        name: 'Taylor Swift',
+        prefix: 'He\'s the reason for the teardrops on my guitar\nThe only thing that keeps me wishing on a wishing star\n'
     },
     "nietzsche.old": {
         chars: ['\n', ' ', '!', '"', "'", '(', ')', ',', '-', '.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '=', '?', '[', ']', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '\x86', '\xa4', '\xa6', '\xa9', '\xab', '\xc3'],
