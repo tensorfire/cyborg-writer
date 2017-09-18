@@ -160,7 +160,7 @@ var cm = CodeMirror(document.getElementById('editor'), {
         }
     },
     // scrollPastEnd: true,
-    placeholder: 'Hit Tab to cycle between synthesized sentences.'
+    placeholder: innerWidth < 700 ? 'Swipe right to cycle between synthesized sentences.' : 'Hit Tab to cycle between synthesized sentences.'
 });
 
 cm.addWidget({ line: 0, ch: 0}, document.getElementById('preamble'))
