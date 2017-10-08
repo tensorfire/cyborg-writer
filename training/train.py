@@ -1,22 +1,35 @@
 # Larger LSTM Network to Generate Text for Alice in Wonderland
 # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/include/
 
-import numpy
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Dropout
 from keras.layers import LSTM, Activation
 from keras.callbacks import ModelCheckpoint, LambdaCallback, TensorBoard
 from keras.utils import np_utils
-import random
 import numpy as np
+import argparse
+import random
 import sys
 import os
 import unidecode
 import string
 
+parser = argparse.ArgumentParser()
+
+parser.add_argument('--dropout', type=float, default=0.)
+parser.add_argument('--size', type=int, default=128)
+parser.add_argument('--layers', type=int, default=1)
+
+parser.add_argument('--seq_length', type=int, default=48)
+
+parser.add_argument('--corpus', required=True)
+parser.add_argument('--model_name', required=True)
+
+args = parser.parse_args()
+
 # load ascii text and covert to lowercase
-filename = "data/eminem.txt"
+filename = args.corpus
 
 charset = set(string.digits + string.letters + string.punctuation + "\n ")
 raw_text = filter(lambda x: x in charset, unidecode.unidecode(open(filename, 'r').read().decode('utf-8')))
@@ -30,19 +43,22 @@ char_indices = dict((c, i) for i, c in enumerate(chars))
 indices_char = dict((i, c) for i, c in enumerate(chars))
 
 # prepare the dataset of input to output pairs encoded as integers
-seq_length = 48
-
-
-model_name = 'eminem-128-128'
+seq_length = args.seq_length
+model_name = args.model_name
 
 model = Sequential()
-model.add(LSTM(128, return_sequences=True, input_shape=(seq_length, len(chars))))
-model.add(Dropout(0.2))
-model.add(LSTM(128))
-model.add(Dropout(0.2))
+
+
+for i in range(args.layers):
+    inshape = (seq_length, len(chars)) if i == 0 else None
+    model.add(LSTM(args.size, input_shape=inshape, return_sequences=i < args.layers - 1))
+    if args.dropout > 0: model.add(Dropout(args.dropout))
+
+# model.add(LSTM(args.size))
+# if args.dropout > 0: model.add(Dropout(0.2))
+
 model.add(Dense(len(chars)))
 model.add(Activation('softmax'))
-
 
 model.compile(loss='categorical_crossentropy', optimizer='adam')
 # define the checkpoint
@@ -119,7 +135,11 @@ def generate_examples():
         yield (X, y)
 
 
-callbacks_list = [ checkpoint, LambdaCallback(on_epoch_begin = sample_text), TensorBoard('logs/' + model_name) ]
+callbacks_list = [
+    checkpoint, 
+    LambdaCallback(on_epoch_begin = sample_text), 
+    TensorBoard('logs/' + model_name) 
+]
 
 
 # model.load_weights("weights-full-alpha-00-1.9680.hdf5")
