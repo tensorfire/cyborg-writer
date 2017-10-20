@@ -13,9 +13,9 @@ body {
 }
 .CodeMirror {
     font: inherit;
-    height: 100%;
+    height: auto;
     width: 100%;
-    position: absolute;
+    // position: absolute;
     line-height: 1.5;
 }
 
@@ -107,10 +107,7 @@ a {
     
     
     background: whiteSmoke;
-    position: absolute;
-    top: 0 !important;
-    right: 0 !important;
-    left: 0 !important;
+    // position: absolute;
 }
 
 
@@ -119,7 +116,11 @@ a {
 }
 
 #do-stuff {
-    display: none;
+    // display: none;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+
 }
 
 @media (max-width: 700px){

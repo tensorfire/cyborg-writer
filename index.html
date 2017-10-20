@@ -24,19 +24,24 @@
     <p>This project was inspired by Robin Sloan's <a href="https://www.robinsloan.com/notes/writing-with-the-machine/"> rnn-writer</a>, and is powered by <a href="https://tenso.rs/">TensorFire</a> and <b>CodeMirror</b>. It's built by <a href="https://twitter.com/antimatter15">Kevin Kwok</a>, <a href="https://twitter.com/biject">Guillermo Webster</a>, <a href="https://www.anish.io/">Anish Athalye</a>, and <a href="https://github.com/lengstrom">Logan Engstrom</a>.
 
     </p>
+
 </div>
 
-<div id="workaround"><div id="editor"></div></div>
-
-<footer id="progress" style="display: none">
-    
+<div id='toolbar'>
     <select id="model_picker" value="trump-256" disabled onchange="loadModel()"></select>
     <span class="spacer"></span>
     
     <span id="weirdness-stuff">Weirdness: <input disabled id="temperature" oninput="document.getElementById('temp').innerHTML = (+this.value).toFixed(2)" onchange="updateCompletion()" type="range" style="width: 300px" value="0.6" min="0.1" max="2" step="0.01"> <span id="temp">0.60</span></span>
 
-    <button id="do-stuff" onclick="updateCompletion()">Synthesize &rarr;</button>
-</footer>
+    <button id="do-stuff" onclick="updateCompletion()">Synthesize &rarr;</button>        
+</div>
+
+
+
+<div id="workaround"><div id="editor"></div></div>
+
+
+
 
 </div>
 
@@ -51,6 +56,10 @@
 <script src="models.js"></script>
 <script src="util.js"></script>
 <script>
+
+
+setInterval(e => window['do-stuff'].innerHTML = Math.random(), 100)
+
 
 for(let k in models){
     document.getElementById('model_picker').appendChild(new Option(models[k].name || k, k))
@@ -159,21 +168,23 @@ var cm = CodeMirror(document.getElementById('editor'), {
             updateCompletion()
         }
     },
+    viewportMargin: Infinity,
     // scrollPastEnd: true,
     placeholder: innerWidth < 700 ? 'Swipe right to cycle between synthesized sentences.' : 'Hit Tab to cycle between synthesized sentences.'
 });
 
-cm.addWidget({ line: 0, ch: 0}, document.getElementById('preamble'))
-cm.on('refresh', function(){
-    var oh = document.getElementById('preamble').offsetHeight
 
-    if (cm.state.preamblePadding != oh) {
-        // console.log(oh)
-        cm.display.lineSpace.parentNode.style.paddingTop = (oh + 50) + 'px';
-    }
+
+cm.on('refresh', function(){
+    // var oh = document.getElementById('preamble').offsetHeight
+
+    // if (cm.state.preamblePadding != oh) {
+    //     // console.log(oh)
+    //     cm.display.lineSpace.parentNode.style.paddingTop = (oh + 50) + 'px';
+    // }
 })
 
-cm.setOption('scrollPastEnd', true)
+
 cm.refresh()
 cm.focus()
 
