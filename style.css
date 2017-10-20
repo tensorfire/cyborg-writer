@@ -145,6 +145,7 @@ select {
     border-radius: 5px;
     font-size: 150%;
     font-family: Menlo, monospace;
+    cursor: pointer;
 }
 
 @media (max-width: 700px){
