@@ -260,6 +260,25 @@ async function updateCompletion(){
 }
 
 
+async function typeInitialText(){
+    let text = cm.options.placeholder;
+    await nextFrame();
+    for(var i = 0; i < text.length; i++){
+        // if(currentCompletion != attempt) return;
+        if(abortTyping) break;
+        
+        // let f = mark.find();
+        // mark.clear()
+        // cm.setSelection(f.from, f.to)
+        cm.replaceSelection(text.slice(0, i + 1), 'around')
+        // mark = cm.markText(cm.getCursor('from'), cm.getCursor('to'))
+
+        await nextFrame();
+    }
+}
+
+typeInitialText()
+
 // https://stackoverflow.com/a/23230280/205784
 document.addEventListener('touchstart', handleTouchStart, false);        
 document.addEventListener('touchmove', handleTouchMove, false);
