@@ -19,9 +19,9 @@
 
     <h1>🤖 Cyborg Writer</h1>
 
-    <p>This is an <b>experimental text editor</b> with an <b>neural text synthesizer</b>. 
+     <p>This is an <b>experimental text editor</b> with an <b>neural text synthesizer</b>. 
 
-    <p>Feeling writer's block? Hit &lt;Tab&gt; to complete a sentence as if it were written by Shakespeare, David Foster Wallace. 
+    <p>Feeling writer's block? Hit <b>&lt;Tab&gt;</b> and a <b>neural text synthesizer</b> running in your <b>web browser</b> will try to complete your sentence as if it were written by <b>Shakespeare</b>, <b>David Foster Wallace</b>, the <b>US Supreme Court</b>, a potpourri of <b>Science Fiction</b> authors, or <b>Taylor Swift</b>. 
 
 
     <p>This project was inspired by Robin Sloan's <a href="https://www.robinsloan.com/notes/writing-with-the-machine/"> rnn-writer</a>, and is powered by <a href="https://tenso.rs/">TensorFire</a> and <b>CodeMirror</b>. It's built by <a href="https://twitter.com/antimatter15">Kevin Kwok</a>, <a href="https://twitter.com/biject">Guillermo Webster</a>, <a href="https://www.anish.io/">Anish Athalye</a>, and <a href="https://github.com/lengstrom">Logan Engstrom</a>.
@@ -171,7 +171,7 @@ var cm = CodeMirror(document.getElementById('editor'), {
     },
     viewportMargin: Infinity,
     // scrollPastEnd: true,
-    placeholder: innerWidth < 700 ? 'Swipe right to cycle between synthesized sentences.' : 'Hit Tab to cycle between synthesized sentences.'
+    // placeholder: innerWidth < 700 ? 'Swipe right to cycle between synthesized sentences.' : 'Hit Tab to cycle between synthesized sentences.'
 });
 
 
@@ -189,7 +189,7 @@ cm.on('refresh', function(){
 var abortTyping = false;
 cm.on('keydown', function(){
     abortTyping = true;
-    console.log('abort')
+    // console.log('abort')
 })
 
 cm.refresh()
@@ -273,7 +273,8 @@ async function updateCompletion(){
 
 
 async function typeInitialText(){
-    let text = cm.options.placeholder;
+    // let text = cm.options.placeholder;
+    let text = innerWidth < 700 ? 'Swipe right to cycle between synthesized sentences.' : 'Hit Tab to cycle between synthesized sentences.'
     await nextFrame();
     for(var i = 0; i < text.length; i++){
         // if(currentCompletion != attempt) return;
@@ -282,14 +283,22 @@ async function typeInitialText(){
         // let f = mark.find();
         // mark.clear()
         // cm.setSelection(f.from, f.to)
-        cm.replaceSelection(text.slice(0, i + 1), 'around')
+        // cm.replaceSelection(text.slice(0, i + 1), 'around')
+        if(text[i] == ' '){
+            await nextFrame();
+            await nextFrame();
+            await nextFrame();
+        }
+
+        cm.setOption('placeholder', text.slice(0, i + 1))
         // mark = cm.markText(cm.getCursor('from'), cm.getCursor('to'))
 
+        await nextFrame();
         await nextFrame();
     }
 }
 
-setTimeout(typeInitialText, 100)
+setTimeout(typeInitialText, 500)
 
 // https://stackoverflow.com/a/23230280/205784
 document.addEventListener('touchstart', handleTouchStart, false);        
