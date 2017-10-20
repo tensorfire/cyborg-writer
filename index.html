@@ -27,18 +27,20 @@
 
 </div>
 
-<div id='toolbar'>
-    <select id="model_picker" value="trump-256" disabled onchange="loadModel()"></select>
-    <span class="spacer"></span>
-    
-    <span id="weirdness-stuff">Weirdness: <input disabled id="temperature" oninput="document.getElementById('temp').innerHTML = (+this.value).toFixed(2)" onchange="updateCompletion()" type="range" style="width: 300px" value="0.6" min="0.1" max="2" step="0.01"> <span id="temp">0.60</span></span>
 
-    <button id="do-stuff" onclick="updateCompletion()">Synthesize &rarr;</button>        
+
+
+<div id="workaround">
+    <div id='toolbar'>
+        <select id="model_picker" value="trump-256" disabled onchange="loadModel()"></select>
+        <span class="spacer"></span>
+        
+        <span id="weirdness-stuff">Weirdness: <input disabled id="temperature" oninput="document.getElementById('temp').innerHTML = (+this.value).toFixed(2)" onchange="updateCompletion()" type="range" style="width: 300px" value="0.6" min="0.1" max="2" step="0.01"> <span id="temp">0.60</span></span>
+
+        <button id="do-stuff" onclick="updateCompletion()">Synthesize &rarr;</button>        
+    </div>
+    <div id="editor"></div>
 </div>
-
-
-
-<div id="workaround"><div id="editor"></div></div>
 
 
 
@@ -56,10 +58,6 @@
 <script src="models.js"></script>
 <script src="util.js"></script>
 <script>
-
-
-// setInterval(e => window['do-stuff'].innerHTML = Math.random(), 100)
-
 
 for(let k in models){
     document.getElementById('model_picker').appendChild(new Option(models[k].name || k, k))

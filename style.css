@@ -35,7 +35,6 @@ body {
 #editor {
     flex: 1;
     position: relative;
-    height: 100%;
 }
 
 html, body {
@@ -47,6 +46,11 @@ html, body {
 
 #workaround, #container {
     height: 100%;
+}
+
+#workaround {
+    display: flex;
+    flex-direction: column;
 }
 
 #toolbar {
