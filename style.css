@@ -148,8 +148,12 @@ select {
     cursor: pointer;
 }
 
+#do-stuff::after {
+    content: " <Tab>"
+}
+
 @media (max-width: 700px){
-    #preamble {
+    #preamble, #toolbar {
         padding: 20px 20px;
     }
     .CodeMirror pre {
@@ -158,7 +162,17 @@ select {
     #weirdness-stuff {
         display: none !important;
     }
+    select, #do-stuff {
+        font-size: 120%;
+    }
+    #do-stuff::after {
+        content: " <Swipe Right>"
+    }
     #do-stuff {
-        display: inline;
+        width: 100%;
+        border-radius: 0;
+        bottom: 0;
+        right: 0;
+        box-sizing: border-box;
     }
 }
