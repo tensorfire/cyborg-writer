@@ -118,11 +118,14 @@ a {
 }
 
 #do-stuff {
-    // display: none;
     position: fixed;
     bottom: 10px;
     right: 10px;
-
+    background: #98ff47;
+    border: 0;
+    border-radius: 5px;
+    font-size: 150%;
+    font-family: Menlo, monospace;
 }
 
 @media (max-width: 700px){
