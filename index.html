@@ -88,7 +88,7 @@ function destroyTensors(tensors){
 var allLSTMWeights = [], allLSTMStates = [], denseWeights, denseBias, oneHotVector, charTensor, state, denseOutput, buffer;
 
 async function loadModel(){
-    document.getElementById('progress').style.display = ''
+    document.getElementById('toolbar').style.display = ''
     document.getElementById('model_picker').disabled = true;
     document.getElementById('temperature').disabled = true;
 
