@@ -3,7 +3,7 @@ html, body {
 }
 
 body {
-    font-family: sans-serif;
+    font-family: Menlo, monospace;
     font-size: 13pt;
 
     background: whiteSmoke;
@@ -73,7 +73,7 @@ footer {
 }
 
 a {
-    color: #3F51B5;
+    color: #61b500;
     text-decoration: none;
     font-weight: bold;
 }

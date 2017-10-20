@@ -165,8 +165,8 @@ var cm = CodeMirror(document.getElementById('editor'), {
     cursorScrollMargin: 50,
     extraKeys: {
         Tab: function(cm){
-            updateCompletion()
-        }
+            setTimeout(updateCompletion, 20);
+        },
     },
     viewportMargin: Infinity,
     // scrollPastEnd: true,
@@ -185,6 +185,12 @@ cm.on('refresh', function(){
 })
 
 
+var abortTyping = false;
+cm.on('keydown', function(){
+    abortTyping = true;
+    console.log('abort')
+})
+
 cm.refresh()
 cm.focus()
 
@@ -193,6 +199,7 @@ async function updateCompletion(){
     if(document.getElementById('model_picker').disabled) return;
     if(isGenerating) return;
     isGenerating = true;
+    abortTyping = false
     // let attempt = Date.now();
     // currentCompletion = attempt;
     var m = models[document.getElementById('model_picker').value]
@@ -229,19 +236,33 @@ async function updateCompletion(){
     
     if(text){
         console.log('new text', text)
-        var f = mark.find();
+        // var f = mark.find();
         
+        // mark.clear()
+        // cm.setSelection(f.from, f.to)
+        // cm.replaceRange(text, f.from, f.to)
+        // cm.replaceSelection(text, 'around')
+
+        for(var i = 0; i < text.length; i++){
+            // if(currentCompletion != attempt) return;
+            if(abortTyping) break;
+            
+            let f = mark.find();
+            mark.clear()
+            cm.setSelection(f.from, f.to)
+            cm.replaceSelection(text.slice(0, i + 1), 'around')
+            mark = cm.markText(cm.getCursor('from'), cm.getCursor('to'))
+
+            await nextFrame();
+        }
+
+        // cm.replaceSelection(text, 'around')
+        let f = mark.find();
         mark.clear()
         cm.setSelection(f.from, f.to)
-        // cm.replaceRange(text, f.from, f.to)
         cm.replaceSelection(text, 'around')
+        mark = cm.markText(cm.getCursor('from'), cm.getCursor('to'))
 
-        // for(var i = 0; i < text.length; i++){
-        //     if(currentCompletion != attempt) return;
-
-        //     cm.replaceSelection(text.slice(0, i + 1), 'around')
-        //     await nextFrame();
-        // }
     }else{
         console.warn('unable to find complete sentence', leadingText)
     }
