@@ -9,7 +9,6 @@ body {
     background: whiteSmoke;
     color: #000;
     margin: 0px;
-    overflow: hidden;
 }
 .CodeMirror {
     font: inherit;
@@ -17,6 +16,7 @@ body {
     width: 100%;
     // position: absolute;
     line-height: 1.5;
+    min-height: 100%;
 }
 
 .CodeMirror pre.CodeMirror-placeholder { color: #999; }
@@ -24,7 +24,7 @@ body {
 .CodeMirror-focused .CodeMirror-selected { background: #bedcfb; }
 
 .CodeMirror-lines {
-    padding: 50px 0;
+    padding: 100px 0;
 }
 .CodeMirror pre {
     padding: 0 100px;
@@ -35,6 +35,7 @@ body {
 #editor {
     flex: 1;
     position: relative;
+    height: 100%;
 }
 
 html, body {
@@ -44,19 +45,16 @@ html, body {
   width: 100%;
 }
 
-#workaround {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    flex: 5;
+#workaround, #container {
+    height: 100%;
 }
 
-#container {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    height: 100%;
-    width: 100%;
+#toolbar {
+    padding: 20px 100px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #e2e2e2;
 }
 
 
