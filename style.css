@@ -55,12 +55,11 @@ html, body {
 }
 
 #toolbar {
-    padding: 20px 100px;
+    padding: 15px 100px;
     position: sticky;
     top: 0;
     z-index: 10;
-    background: #f5f5f5;
-    border-top: 1px solid #e2e2e2;
+    background: #dedede;
     display: flex;
 }
 
@@ -111,12 +110,13 @@ a {
     opacity: 0.8;
     
     
-    background: whiteSmoke;
+    background: #424240;
+    color: #f7f7f7;
     // position: absolute;
 }
 
 select {
-    font-size: 150%;
+    font-size: 110%;
     background: rgb(255, 255, 255);
     color: #4a4a4a;
 }
@@ -127,7 +127,7 @@ select {
     text-align: center;
     vertical-align: middle;
     /* margin-bottom: -10px; */
-    border: 1px solid #e2e2e2;
+    // border: 1px solid #e2e2e2;
     padding: 10px;
 }
 
@@ -137,24 +137,25 @@ select {
 }
 
 #do-stuff {
+    padding: 6px 15px;
     position: fixed;
     bottom: 10px;
     right: 10px;
-    background: #98ff47;
+    background: #97cc70;
     border: 0;
     border-radius: 5px;
-    font-size: 150%;
+    font-size: 117%;
     font-family: Menlo, monospace;
     cursor: pointer;
+    color: white;
 }
+// #do-stuff::after {
+//     content: " <Tab>"
+// }
 
-#do-stuff::after {
-    content: " <Tab>"
-}
-
-@media (max-width: 700px){
+@media (max-width: 900px){
     #preamble, #toolbar {
-        padding: 20px 20px;
+        padding: 15px 20px;
     }
     .CodeMirror pre {
         padding: 0 20px;
@@ -164,9 +165,6 @@ select {
     }
     select, #do-stuff {
         font-size: 120%;
-    }
-    #do-stuff::after {
-        content: " <Swipe Right>"
     }
     #do-stuff {
         width: 100%;
