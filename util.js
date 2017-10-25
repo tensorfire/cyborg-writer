@@ -31,7 +31,7 @@ function createProgress(label, container){
             // document.querySelector('.pie .left-side').style.transform = 'rotate(' + (360 * n) + 'deg)'
             // document.querySelector('.pie').classList.toggle('over-fifty', n > 0.5)
             var p = Math.round(n * 100);
-            document.getElementById('toolbar').style.background = '-webkit-linear-gradient(left, rgb(204, 208, 230) '+p+'%, #f7f7f7 '+p+'%)'
+            document.getElementById('toolbar').style.background = '-webkit-linear-gradient(left, #97cc70 '+p+'%, #e0e8d9 '+p+'%)'
         },
         destroy(){
             // document.querySelector('.pie-wrapper').style.display = 'none'

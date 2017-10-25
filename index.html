@@ -44,8 +44,8 @@
 
             <input disabled id="temperature"
                 oninput="document.getElementById('temp').innerHTML = (+this.value).toFixed(2)"
-                onchange="updateCompletion()" type="range" style="width: 300px" value="0.6" min="0.1" max="2" step="0.01">
-            <span id="temp">0.10</span>
+                onchange="updateCompletion()" type="range" style="width: 300px" value="0.6" min="0.2" max="2" step="0.01">
+            <span id="temp">0.60</span>
         </span>
 
         <!-- &rarr; -->
@@ -232,6 +232,8 @@ async function updateCompletion(){
     })
     cm.setSelection(cm.getCursor('to'))
 
+    // return;
+
     
     var text = null;
     await nextFrame();
@@ -240,13 +242,13 @@ async function updateCompletion(){
 
     var raw_completion = await generateCompletion(leadingText, +document.getElementById('temperature').value);
     try {
-        text = raw_completion.match(/^.*?((\.|\!|\;)+\s|\n)/)[0]
+        text = raw_completion.match(/^.*?((\.|\!|\;)+\s+|\n+)/)[0]
     } catch (err) {
-        text = raw_completion.split(' ').slice(0, 10).join(' ')
+        text = raw_completion.split(' ').slice(0, 15).join(' ')
     }
     
     if(text){
-        console.log('new text', text)
+        // console.log('new text', text)
         // var f = mark.find();
         
         // mark.clear()
