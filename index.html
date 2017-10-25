@@ -254,9 +254,9 @@ async function updateCompletion(){
 
     var raw_completion = await generateCompletion(leadingText, +document.getElementById('temperature').value);
     try {
-        text = raw_completion.match(/^.*?((\.|\!|\;)+\s+|\n+)/)[0]
+        text = raw_completion.match(/^.*?((\.|\!|\;)+\s+)/)[0]
     } catch (err) {
-        text = raw_completion.split(' ').slice(0, 15).join(' ')
+        text = raw_completion.split(' ').slice(0, -2).join(' ')
     }
     
     if(text){
